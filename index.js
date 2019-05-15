@@ -25,6 +25,7 @@ tag_list = Array.from(tag_list);
 console.log(tag_list);
 
 //To keep track of whose turn it is
+//player turn means human player's turn
 var player_turn = true;
 
 //Human player makes his input when it is human player's turn
@@ -51,6 +52,7 @@ function computer_input(){
     if (player_turn == false){
         random_id = getRndInteger(0, 9);
         while (tag_list[random_id].textContent == 'X' || tag_list[random_id].textContent== 'O'){
+            //to prevent infinite loop
             if (draw_condition()) {
                 return
             } else {
@@ -75,7 +77,7 @@ function win_condition(){
     }
 
     //column wins 
-    for (let i = 0; i < 3; i ++){
+    for (let i = 0; i < 3; i++){
         check_string = tag_list[i].textContent + tag_list[i+3].textContent + tag_list[i+6].textContent;
         if (check_string == "XXX" || check_string ==  "OOO"){
             return true;
@@ -119,22 +121,25 @@ function draw_condition(){
 
 //Function to check for win condition or draw condition
 function end_of_player_turn(){
-    computer_input();
-    if (win_condition()){
-        if (player_turn == true){
-            var winner = 'You';
-        } else {
-            winner = 'Computer'
-        }
-        if(confirm(winner + ' won \nPlay again?')){
-            window.location.reload();  
-        }
-
-    } else if (draw_condition()) {
-        if(confirm('Game is a draw \nPlay again?')){
-            window.location.reload();  
+    function determine_result(){
+        if (win_condition()){
+            if (player_turn){
+                var winner = 'Computer';
+            } else {
+                winner = 'You'
+            }
+            if(confirm(winner + ' won \nPlay again?')){
+                window.location.reload();  
+            }
+        } else if (draw_condition()) {
+            if(confirm('Game is a draw \nPlay again?')){
+                window.location.reload();  
+            }
         }
     }
+    determine_result();
+    computer_input();
+    determine_result();
 }
 
     //to delay the computer input 
